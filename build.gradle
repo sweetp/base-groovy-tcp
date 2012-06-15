@@ -1,0 +1,38 @@
+apply plugin: 'groovy'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'codenarc'
+
+version = '0.1'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	// groovy version to use
+	groovy group: 'org.codehaus.groovy', name: 'groovy', version: '1.8.0'
+	// this is for testing your service
+	testCompile group: 'junit', name: 'junit', version: '4.8.2'
+	// use gmock or delete if you want something otehr
+	testCompile('org.gmock:gmock:0.8.1') {
+		// gmock wants groovy 1.7.4 but we provide 1.8
+		exclude module: 'groovy-all'
+	}
+
+	/////////////////////////////////////////
+	// add your libraries here
+	/////////////////////////////////////////
+	compile('net.sf.json-lib:json-lib:2.2.3:jdk15@jar') {
+		transitive = true
+	}
+}
+
+jar {
+    from sourceSets.main.allJava
+	from sourceSets.main.allGroovy
+}
+
+codenarc {
+	configFile = file('config/codenarc/rules.groovy')
+}
